@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { MobileShell } from '@/components/mobile-shell'
 import { BottomNav } from '@/components/bottom-nav'
 import { LoginScreen } from '@/components/screens/login-screen'
 import { HomeScreen } from '@/components/screens/home-screen'
@@ -16,7 +15,6 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<TabId>('inicio')
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null)
 
-  // Check if user is logged in (simulated with localStorage)
   useEffect(() => {
     const logged = localStorage.getItem('equipopago_logged_in')
     if (logged === 'true') {
@@ -48,34 +46,29 @@ export default function App() {
   }
 
   return (
-    <MobileShell>
-      <div className="relative h-full">
-        {!isLoggedIn ? (
-          <LoginScreen onLogin={handleLogin} />
-        ) : (
-          <>
-            {/* Team detail view */}
-            {selectedTeamId ? (
-              <TeamDetailScreen 
-                teamId={selectedTeamId} 
-                onBack={handleBackFromTeam} 
-              />
-            ) : (
-              <>
-                {/* Tab content */}
-                {activeTab === 'inicio' && (
-                  <HomeScreen onNavigateToTeam={handleNavigateToTeam} />
-                )}
-                {activeTab === 'morosos' && <MorososScreen />}
-                {activeTab === 'perfil' && <ProfileScreen onLogout={handleLogout} />}
-              </>
-            )}
+    <div className="relative min-h-screen w-full">
+      {!isLoggedIn ? (
+        <LoginScreen onLogin={handleLogin} />
+      ) : (
+        <>
+          {selectedTeamId ? (
+            <TeamDetailScreen
+              teamId={selectedTeamId}
+              onBack={handleBackFromTeam}
+            />
+          ) : (
+            <>
+              {activeTab === 'inicio' && (
+                <HomeScreen onNavigateToTeam={handleNavigateToTeam} />
+              )}
+              {activeTab === 'morosos' && <MorososScreen />}
+              {activeTab === 'perfil' && <ProfileScreen onLogout={handleLogout} />}
+            </>
+          )}
 
-            {/* Bottom navigation */}
-            <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
-          </>
-        )}
-      </div>
-    </MobileShell>
+          <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
+        </>
+      )}
+    </div>
   )
 }
